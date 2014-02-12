@@ -5,16 +5,50 @@
   <script src="./game.js"></script>
   <script src="./scenes.js"></script>
   <script src="./components.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+  <script> 
+  var disableScroll = function(e){
+    if (e.keyCode === 40 || e.keyCode === 38 || e.keyCode === 32) {
+        e.preventDefault();
+        return false;
+    }
+  };
+  $(window).on('keydown', disableScroll);
+  </script>
 
   <script>
     window.addEventListener('load', Game.start);
   </script>
+  
+  <title> Camouflage - A Game of Anonymity </title>
+  
 </head>
 
 <body>
 
-    <h3>Camoflage:</h3>
-    <div id="cr-stage"></div>
+    <img src="./static/Camouflage.png">
+    <div style="float: left; display: block;" id="cr-stage"></div>
+    <div style="float: left; display: block; width: 350px; height: 450px; margin-left: 25px;" id="instructions">
+    	<h4>How to Play:</h4>
+    	<p> You and your opponent are the only human controlled characters on the screen. </p>
+    		
+    	<p> The rest of the characters are decoys, and move in a very predictable pattern. You will want to imitate their movements as best you can. </p>
+    	
+    	<p> Your goal is to find and destroy your opponent, while maintaining your anonymity. </p>
+    	
+    	<h4> Controls: </h4>
+    	
+    	<p> Player One moves with the WASD keys, and shoots with SPACE. </p>
+
+		<p> Player Two moves with the ARROW keys, and shoots with ENTER. </p>  
+		
+		<h4> Parting Words: </h4>
+		
+		<p> Your placement at the beginning of the game is random, so look closely to find yourself, and then look even closer to find your opponent. </p>
+		
+		<p> Good Luck! </p>  	
+    </div>
 
 </body>
 

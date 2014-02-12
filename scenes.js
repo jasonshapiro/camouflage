@@ -1,5 +1,12 @@
 Crafty.scene('gameStart', function() {
-
+	
+  Game.over = false;
+  
+  Crafty.unbind('EnterFrame');
+  Crafty.viewport.x = 0; // Correction for screenshake drift
+  
+  Crafty.e('blackScreen').fadeOut(.01);
+  	
   var decoys = 20;
 
   for (var x = 0; x < Game.map_grid.width; x++) {
@@ -22,10 +29,30 @@ Crafty.scene('gameStart', function() {
 
 });
 
-Crafty.scene('startScreen', function() {
+Crafty.scene('startScreenScene', function() {
 
-  Crafty.e('2D, DOM, Text')
-    .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
-    .text('Victory!');
 
+ 	Crafty.e('2D, Canvas, Text')
+    	.attr({ w: 100, h: 20, x: 180, y: 280, z: 6 })
+    	.text('Press Any Key To Start')
+    	.textFont({ size: '36px', weight: 'bold'})
+    	.textColor('#FFFFFF', 0.6)
+    	.bind('KeyDown', function(e) {
+    		Crafty.scene('gameStart');
+    	});
+	
+	
 });
+
+
+Crafty.scene('victoryScreenScene', function() {
+	
+	Crafty.e('2D, DOM, Text')
+		.attr({ w: 400, h: 20, x: 180, y: 280, z: 6 })
+		.text('The current score is ' + Game.player1Score + "-" + Game.player2Score + ". \n Press any key to play again.")
+		.bind('KeyDown', function(e) {
+    		Crafty.scene('gameStart');
+    	});
+});
+
+$text_css = { 'size': '24px', 'family': 'Arial', 'color': 'red', 'text-align': 'center' };

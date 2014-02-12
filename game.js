@@ -19,16 +19,26 @@ Game = {
 
   player1Score: 0,
   player2Score: 0,
+  over: true,
 
   start: function() {
 
     Crafty.init(Game.width(), Game.height());
-    Crafty.background('rgb(249, 223, 125)');
+    Crafty.background('#0C0C0C');
 
-    Crafty.scene('gameStart');
+    Crafty.scene('startScreenScene');
 
   }
 
 }
 
-$text_css = { 'size': '24px', 'family': 'Arial', 'color': 'red', 'text-align': 'center' };
+
+function screenShake(frameArray) {
+	if (!frameArray) {frameArray = [7,7,-7,-7,-7,-7,7,7,7,7,-7,-7,-7,-7,7,7]};
+	var framecount = 0;
+	Crafty.bind('EnterFrame', function() {
+		Crafty.viewport.x += frameArray[framecount];
+		framecount++;
+		if (framecount == frameArray.length) {Crafty.unbind('EnterFrame')}
+	});
+};
