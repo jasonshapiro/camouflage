@@ -197,7 +197,8 @@ Crafty.c('player', {
 			};
 		};
 
-   	 	Crafty.e('Bullet').at(player.x/Game.map_grid.tile.width + direction[0], player.y/Game.map_grid.tile.height + direction[1]).move(direction);
+   	 	Crafty.e('Bullet').setCreator(player).at(player.x/Game.map_grid.tile.width + direction[0], player.y/Game.map_grid.tile.height + direction[1]).move(direction);
+		// important to prevent bullets from killing creators, and adds the secret ability to leave mines :)
    	 	
   	}
 });
@@ -264,13 +265,22 @@ Crafty.c('Bullet', {
     this.requires('solid, Movement');
     this.origin("center");
     this.setFrameSpeed(3);
+    this._creator = Crafty('player');
+    
     this.onHit('decoy', function() {this.destroy(); Crafty.e('bulletFade').origin('center').attr({x: this.x, y: this.y, rotation: this.rotation})}); //delays the destruction of the bullet by one frame for smoother animation
 
-    this.onHit('player1', function() {this.destroy(); screenShake();
-    	if (!Game.over) {this.gameEnd('player2', 'player1'); Game.over = true}}); //player 2 victory condition
+    this.onHit('player1', function() {
+		if (!this._creator.has('player1')) {    	
+    		this.destroy(); Crafty.e('bulletFade').origin('center').attr({x: this.x, y: this.y, rotation: this.rotation}).color('rgb(255,0,0)'); screenShake();
+    		if (!Game.over) {this.gameEnd('player2', 'player1'); Game.over = true}}; //player 2 victory condition
+		});
 
-    this.onHit('player2', function() {var thisBullet = this; setTimeout(function() {thisBullet.destroy()}, 1); screenShake();
-    	if (!Game.over) {this.gameEnd('player1', 'player2'); Game.over = true}}); ; //player 1 victory condition
+    this.onHit('player2', function() {
+    	if (!this._creator.has('player2')) {    	
+    		this.destroy(); Crafty.e('bulletFade').origin('center').attr({x: this.x, y: this.y, rotation: this.rotation}).color('rgb(255,0,0)'); screenShake();
+    		if (!Game.over) {this.gameEnd('player1', 'player2'); Game.over = true}}; ; //player 1 victory condition
+		});
+
 
 	var bulletMovement = function() {
 
@@ -291,12 +301,19 @@ Crafty.c('Bullet', {
     	.textColor('#CDCDCD', 1)
 		.text(wintext + " wins!");
 		 setTimeout(function() {Crafty.scene('gameStart')}, 5000);
+  },
+  
+  setCreator: function(player) {
+  		this._creator = player;
+  		return this;
   }
 
 });
 
 Crafty.c('bulletFade', {
 	init: function() {
-		this.requires('solid, Tween').tween({alpha: 0}, 300).one("TweenEnd", function() {this.destroy()});
+		this.requires('solid, Tween, Color').tween({alpha: 0}, 300).one("TweenEnd", function() {this.destroy()});
 	}
 });
+
+
